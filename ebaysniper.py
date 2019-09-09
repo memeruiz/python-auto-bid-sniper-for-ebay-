@@ -1,31 +1,30 @@
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.common.keys import Keys
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 import time
 import pause, datetime
 
 
-itemidurl = "fullItemUrl"
-maxbidebay = "6.00"
-timeToBidSecs = 30
+ITEM_URL = "https://www.ebay.com/itm/NYMPH-ASSORTMENT-136-flies-in-a-new-waterproof-fly-box/123886469909?hash=item1cd8358315:g:OlgAAOSw~6ddYtfw"
+MAX_BID = "65.00"
+TIME_TO_BID_SECS = 45
+USER_NAME= "yourusername"
+PWD="yourpwd"
+
+driver = None
 
 try:
     driver = webdriver.Firefox()
 
     #Find item url to get end time in ms
-    driver.get(itemidurl)
+    driver.get(ITEM_URL)
     time.sleep(3)
     endTimeAttr = driver.find_element_by_class_name("timeMs")
     endTimeMs = endTimeAttr.get_attribute("timems")
     print ("End time in ms: " + str(endTimeMs))
-    bidTime = int(endTimeMs) - 30*1000
+    bidTime = int(endTimeMs) - TIME_TO_BID_SECS*1000
     #endTime = time(bidTime)
     print("Bid time: " + str(bidTime))
 
+    #Convert to datetime understandable time from bidTime
     bidTime = bidTime/1000
     ts = datetime.datetime.fromtimestamp(bidTime).strftime('%Y-%m-%d %H:%M:%S')
     print ("Sleeping until bid time: " + str(ts))
@@ -39,19 +38,19 @@ try:
 
     time.sleep(3)
     elements = driver.find_elements_by_class_name("fld")
-    elements[2].send_keys("username")
-    elements[3].send_keys("pwd")
+    elements[2].send_keys(USER_NAME)
+    elements[3].send_keys(PWD)
 
     time.sleep(3)
     button = driver.find_element_by_id("sgnBt")
     button.click()
 
     time.sleep(2)
-    driver.get(itemidurl)
+    driver.get(ITEM_URL)
 
     time.sleep(3)
     elements = driver.find_element_by_id("MaxBidId")
-    elements.send_keys(maxbidebay)
+    elements.send_keys(MAX_BID)
     elements = driver.find_element_by_id("bidBtn_btn")
     elements.click()
 
