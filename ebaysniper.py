@@ -43,7 +43,7 @@ def main():
 
     USER_NAME = params.userName
     PWD = params.passWord
-    TIME_TO_BID_SECS = params.timeToBid
+    TIME_TO_BID_SECS = int(params.timeToBid)
     ITEM_URL = params.itemUrl
     MAX_BID = params.maxBid
 
@@ -79,9 +79,20 @@ def main():
         driver.get('https://signin.ebay.com/ws/eBayISAPI.dll')
 
         time.sleep(3)
-        elements = driver.find_elements_by_class_name("fld")
-        elements[2].send_keys(USER_NAME)
-        elements[3].send_keys(PWD)
+        elements = driver.find_elements_by_id("userid")
+        print("Elements", elements)
+        elements[0].send_keys(USER_NAME)
+        #elements[3].send_keys(PWD)
+
+        time.sleep(3)
+        button = driver.find_element_by_id("signin-continue-btn")
+        button.click()
+
+        time.sleep(3)
+        elements = driver.find_elements_by_id("pass")
+        print("Elements", elements)
+        elements[0].send_keys(PWD)
+        #elements[3].send_keys(PWD)
 
         time.sleep(3)
         button = driver.find_element_by_id("sgnBt")
